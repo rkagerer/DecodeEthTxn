@@ -1,4 +1,4 @@
-# DecodeEthTxn
+# Summary
 Quick and dirty tool that runs entirely on the client side and lets you decode a signed Ethereum transaction.
 
 # Limitations
