@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <script src="ethereumjs-tx-sign-bundled.js"></script>
+    <!-- Obtained from: <script src="https://rawgit.com/warren-bank/ethereumjs-tx-sign/master/browser-build/dist/js/bundle.js"></script> -->
+    
+    <script>
+      
+      const {unsign} = window.ethereumjs_tx_sign
+      
+      /* Sample test code
+      {
+        let rawTx = "f874808506fc23ac008227108080a47f746573743200000000000000000000000000000000000000000000000000000060005725a0fbbabeb385a5419062514db3fe85810876cdc4608cc9df11620a5a5c4dcdf149a010b15babddb17af1b970b6ed47a4f47b60e4a95ffd95842059977c76510038e0"
+        let {txData, signature, msgHash, publicKey, address} = unsign(rawTx)
+        console.log("txData:", txData)
+      }
+      */
+      
+      function update() {
+        let txtRaw = document.getElementById("raw");
+        let txtDecoded = document.getElementById("decoded");
+        let txtInterpreted = document.getElementById("interpreted");
+        try {
+          let rawTx = txtRaw.value;
+          let {txData, signature, msgHash, publicKey, address} = unsign(rawTx);
+          txtDecoded.value = JSON.stringify(txData);
+          txtInterpreted.value = 
+            "To: " + txData.to + "\n" +
+            "Value: " + (txData.value / 1e18) + " ETH\n" +
+            "Gas Price: " + (txData.gasPrice / 1e9) + " Gwei\n" +
+            "Max fee: " + (txData.gasPrice * txData.gasLimit / 1e18) + " ETH\n" +
+            "Max spend: " + ((txData.gasPrice * txData.gasLimit + txData.value * 1E0) / 1e18) + " ETH"
+        } catch(err) {
+          if (txtDecoded) txtDecoded.value = "";
+          if (txtInterpreted) txtInterpreted.value = err.toString();
+        }
+      }
+
+    </script>
+  </head>
+  <body>
+    
+    Raw signed transaction:<br/>
+    <textarea id="raw" rows ="5" cols="100" maxlength="2000" wrap oninput="update()"></textarea><br/><br/>
+    
+    Decoded:<br/>
+    <textarea id="decoded" rows="5" cols="100" readonly wrap style="background-color:lightgrey"></textarea><br/><br/>
+    
+    Interpreted:<br/>
+    <textarea id="interpreted" rows="10" cols="100" readonly wrap style="background-color:lightgrey"></textarea><br/><br/>
+    
+  </body>
+</html>
